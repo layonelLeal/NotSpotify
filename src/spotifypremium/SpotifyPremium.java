@@ -93,7 +93,7 @@ public class SpotifyPremium {
             System.out.println("0) Salir.");
             System.out.println("1) Agregar Cancion a Favoritos.");
             System.out.println("2) Mirar Listado de Favoritos.");
-            System.out.println("3) Buscar una canción en Favoritos.");
+            System.out.println("3) Buscar una cancion en Favoritos.");
             System.out.println("4) Limitar Listado a un rango");
             System.out.println("-------------------------------------");
             System.out.println("Elije la opcion a realizar:");
@@ -115,6 +115,7 @@ public class SpotifyPremium {
                     
                     Music newMusic = new Music(musicName, musicAutor, musicYear, musicReprod);
                     like_musics.put(newMusic, newMusic);
+                    System.out.println("La Cancion a sido agregada exitosamente.");
                 }
                 case 2->{
                     System.out.println("--------------------------------------------------");
@@ -181,11 +182,13 @@ public class SpotifyPremium {
                 }
                 default -> System.out.println("Error la opcion es invalida.");
             }
-            System.out.println("\nPreciona alguna tecla para continuar...");
-            try {
-                System.in.read();
-            } catch (Exception e) {
-                System.out.println("No c pudo");
+            if (input != 0 && input != 1){
+                System.out.println("\nPreciona alguna tecla para continuar...");
+                try {
+                    System.in.read();
+                } catch (Exception e) {
+                    System.out.println("No c pudo");
+                }
             }
         }while(input != 0);
     }
