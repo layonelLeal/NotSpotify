@@ -1,6 +1,7 @@
 package spotifypremium;
 
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -28,6 +29,12 @@ public class SpotifyPremium {
                     Integer year1 = Music1.getYear();
                     Integer year2 = Music2.getYear();
                     int MusicOrder = year1.compareTo(year2); 
+                    if (MusicOrder == 0){
+                        String name1 = Music1.getNombre();
+                        String name2 = Music2.getNombre();
+                        MusicOrder = name1.compareTo(name2);
+                        return MusicOrder; 
+                    }
                     return MusicOrder;
                 }
                 case 3 -> {
@@ -43,16 +50,18 @@ public class SpotifyPremium {
             }
         });
         
-        for (Music value: currentList.values()){
-            reorderList.put(value, value);
-        }
+        //for (Music value: currentList.values()){
+          //  reorderList.put(value, value);
+        //}
+        
+        reorderList.putAll(currentList);
         
         return reorderList;
     }
 
     public static void main(String[] args) {
         //Definir variables
-        int input = -1; //variable para la opción que ingresa el usuario
+        int input; //variable para la opción que ingresa el usuario
         int keyOrden; //variable para guardar el dato por el que se ordenará el mapa
         int order; // ascendente o descendente
         Scanner sc = new Scanner(System.in); //leer datos por teclado
@@ -66,11 +75,16 @@ public class SpotifyPremium {
         });
         
         //Canciones de la base de datos
-        like_musics.put(new Music("Morocha", "Milo J", 2023, 21000000), new Music("Morocha", "Milo J", 2023, 21000000));
+        like_musics.put(new Music("Morocha", "Milo J", 2023, 21000000), new Music("Morocha  ", "Milo J  ", 2023, 21000000));
         like_musics.put(new Music("El Bolero", "Yami Safdie", 2023, 26000000), new Music("El Bolero", "Yami Safdie", 2023, 26000000));
         like_musics.put(new Music("Tres para tres", "Soda Stereo", 2016, 6500000), new Music("Tres para tres", "Soda Stereo", 2016, 6500000));
         like_musics.put(new Music("The Reason", "Hoobastank", 2010, 10590000), new Music("The Reason", "Hoobastank", 2010, 10590000));
-        like_musics.put(new Music("yellow", "Coldplay", 2012, 136000000), new Music("yellow", "Coldplay", 2012, 136000000));
+        like_musics.put(new Music("yellow", "Coldplay", 2012, 1036000000), new Music("yellow  ", "Coldplay", 2012, 136000000));
+        like_musics.put(new Music("Bonsai", "Alan Sutton", 2023, 6000000), new Music("Bonsai  ", "Alan Sutton", 2023, 6000000));
+        like_musics.put(new Music("Human nature", "Michael Jackson", 1982, 21000000), new Music("Human nature", "Michael Jackson", 1983, 21000000));
+        like_musics.put(new Music("Sol   ", "Willian", 2022, 10000000), new Music("Sol      ", "Willian ", 2022, 10000000));
+        like_musics.put(new Music("Carrie", "Europe", 1986, 22900000), new Music("Carrie  ", "Europe  ", 1986, 22900000));
+        like_musics.put(new Music("Alguien como tu", "Josean log", 2020, 25000000), new Music("Alguien como tu", "Josean Log", 2020, 25000000));
         
         do{
             System.out.println("|***********************************|");
@@ -79,6 +93,8 @@ public class SpotifyPremium {
             System.out.println("0) Salir.");
             System.out.println("1) Agregar Cancion a Favoritos.");
             System.out.println("2) Mirar Listado de Favoritos.");
+            System.out.println("3) Buscar una canción en Favoritos.");
+            System.out.println("4) Limitar Listado a un rango");
             System.out.println("-------------------------------------");
             System.out.println("Elije la opcion a realizar:");
             input = sc.nextInt();
@@ -107,9 +123,11 @@ public class SpotifyPremium {
                     System.out.println("2) Por Autor");
                     System.out.println("3) Por Anio");
                     System.out.println("4) Por Reproducciones");
+                    System.out.println("5) Por un rango de letras (A - M)");
                     System.out.println("--------------------------------------------------");
                     
                     keyOrden = sc.nextInt() - 1;
+                    
                     ConcurrentSkipListMap<Music, Music> list_music_order = ordenar(like_musics, keyOrden);
                     
                     System.out.println("--------------------------------------------------");
@@ -120,7 +138,10 @@ public class SpotifyPremium {
                     
                     order = sc.nextInt();
                     
-                    System.out.println("\n\n####### LISTADO DE CANCIONES ########\n\n");
+                    System.out.println("\n\n\t\t\t####### LISTADO DE CANCIONES ########");
+                    System.out.println("|--------------------------------------------------------------------------------|");
+                    System.out.println("| NOMBRE \t\t| AUTOR \t\t| REPRODUCCIONES \t| ANIO \t |");
+                    System.out.println("|--------------------------------------------------------------------------------|");
                     
                     if (order == 1){
                         for (Music value: list_music_order.values()){
@@ -133,10 +154,39 @@ public class SpotifyPremium {
                     }
                     
                     System.out.println("\n");
+                    break;
+                }
+                case 3->{
+                    System.out.println("Ingresa el nombre de la canción que deseas buscar: ");
+                    String searchName = sc.next();
+                    Music resultName = like_musics.ceilingEntry(new Music(searchName)).getValue();
+                    System.out.println("\n\n\t\t\t####### Cancion Encontrada ########");
+                    System.out.println("|--------------------------------------------------------------------------------|");
+                    System.out.println("| NOMBRE \t\t| AUTOR \t\t| REPRODUCCIONES \t| ANIO \t |");
+                    System.out.println("|--------------------------------------------------------------------------------|");
+                    resultName.printMusic();
+                }
+                case 4->{
+                    System.out.println("Ingrese la letra de inicio, luego un espacio y la letra final:");
+                    String inicio = sc.next();
+                    String fin = sc.next();
+                    System.out.println("\n\n\t\t\t####### Canciones Encontradas ########");
+                    System.out.println("|--------------------------------------------------------------------------------|");
+                    System.out.println("| NOMBRE \t\t| AUTOR \t\t| REPRODUCCIONES \t| ANIO \t |");
+                    System.out.println("|--------------------------------------------------------------------------------|");
+                    ConcurrentNavigableMap<Music, Music> like_musics_range = like_musics.subMap(new Music(inicio), new Music(fin));
+                    for (Music value: like_musics_range.values()){
+                        value.printMusic();
+                    }
                 }
                 default -> System.out.println("Error la opcion es invalida.");
             }
-
+            System.out.println("\nPreciona alguna tecla para continuar...");
+            try {
+                System.in.read();
+            } catch (Exception e) {
+                System.out.println("No c pudo");
+            }
         }while(input != 0);
     }
     
