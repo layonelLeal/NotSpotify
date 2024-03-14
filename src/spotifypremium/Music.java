@@ -17,9 +17,13 @@ class Music {
         this.reprod = reprod;
     }
     
+    public Music(String name) {
+        this.nombre = name;
+    }
+    
     public void printMusic(){
-        System.out.println("Nombre: "+ nombre + " | Autor: " + autor +
-                " | Reproducciones: " + reprod + " | Anio: " + year);
+        System.out.println("| "+ nombre + "      \t| " + autor +
+                "      \t| " + reprod + "        \t| " + year);
     }
     
     public String getNombre(){
